@@ -43,7 +43,36 @@ eeg_finetuner/
 
 ## Usage
 
-### Basic Example
+### Running with a Configuration File
+
+You can run experiments using a YAML configuration file. This is the recommended way to manage different experimental setups.
+
+```bash
+python eeg_finetuner/main.py --config config.yaml
+```
+
+Example `config.yaml`:
+
+```yaml
+foundation_model:
+  model_name: "labram"
+  input_size: 128
+  num_channels: 64
+  embedding_size: 128
+task:
+  task_type: "classification"
+  num_classes: 2
+  decoder_type: "linear"
+training:
+  freeze_backbone: true
+  learning_rate: 0.001
+  max_epochs: 10
+data:
+  dataset: "example_eeg_dataset"
+  batch_size: 32
+```
+
+### Basic Example (Python API)
 
 ```python
 import lightning as L

@@ -1,0 +1,16 @@
+foundation_model:
+  model_name: "labram"
+  input_size: 128
+  num_channels: 64
+  embedding_size: 128
+task:
+  task_type: "classification"
+  num_classes: 2
+  decoder_type: "linear"
+data:
+  dataset: "example_eeg_dataset"
+  batch_size: 16
+training:
+  freeze_backbone: true
+  learning_rate: 0.001
+  max_epochs: 2

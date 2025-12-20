@@ -4,7 +4,7 @@ from task_head import get_task_head
 import torch
 from torch.nn import functional as F
 
-class EEGFineTuner(L.LightningModule):
+class FEMTaskAdapter(L.LightningModule):
     # https://lightning.ai/docs/pytorch/stable/advanced/transfer_learning.html
     def __init__(self, 
         foundation_model: dict = {

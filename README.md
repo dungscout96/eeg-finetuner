@@ -51,6 +51,8 @@ pip install .
 
 You can run experiments using a YAML configuration file. This is the recommended way to manage different experimental setups.
 
+(The current main.py file can be run as is. It's using mock data and model.)
+
 Using `uv` (recommended):
 
 ```bash

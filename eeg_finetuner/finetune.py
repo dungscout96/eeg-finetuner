@@ -1,8 +1,9 @@
 import lightning as L
-from foundation_model import get_foundation_model
-from task_head import get_task_head
 import torch
 from torch.nn import functional as F
+
+from .foundation_model import get_foundation_model
+from .task_head import get_task_head
 
 class FEMTaskAdapter(L.LightningModule):
     # https://lightning.ai/docs/pytorch/stable/advanced/transfer_learning.html

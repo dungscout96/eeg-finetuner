@@ -4,7 +4,7 @@ A standardized framework for fine-tuning EEG foundation models using PyTorch Lig
 
 ## Features
 
-- **Standardized Fine-tuning**: Uses PyTorch Lightning (`EEGFineTuner`) for a consistent training workflow.
+- **Standardized Fine-tuning**: Uses PyTorch Lightning (`FEMTaskAdapter`) for a consistent training workflow.
 - **Modular Backbones**: Support for EEG foundation models like LaBRAM.
 - **Flexible Task Heads**: Easily switch between Linear and MLP heads for classification or regression.
 - **Configuration-Driven**: Define models, tasks, and data using simple dictionaries.
@@ -32,13 +32,17 @@ pip install .
 ## Project Structure
 
 ```text
-eeg_finetuner/
-├── foundation_model/    # EEG backbone implementations
-│   └── labram/          # LaBRAM model support
-├── task_head.py         # Task head definitions (Linear, MLP)
-├── finetune.py          # PyTorch Lightning adapter (EEGFineTuner)
-├── data.py              # Data loading utilities
-└── main.py              # Example entry point
+.
+├── main.py              # Entry point for running experiments
+├── config.yaml          # Configuration file for experiments
+├── eeg_finetuner/
+│   ├── foundation_model/    # EEG backbone implementations
+│   │   └── labram/          # LaBRAM model support
+│   ├── task_head.py         # Task head definitions (Linear, MLP)
+│   ├── finetune.py          # PyTorch Lightning adapter (FEMTaskAdapter)
+│   ├── data.py              # Data loading utilities
+│   └── __init__.py
+└── pyproject.toml       # Project dependencies and metadata
 ```
 
 ## Usage
@@ -47,8 +51,16 @@ eeg_finetuner/
 
 You can run experiments using a YAML configuration file. This is the recommended way to manage different experimental setups.
 
+Using `uv` (recommended):
+
 ```bash
-python eeg_finetuner/main.py --config config.yaml
+uv run main.py --config config.yaml
+```
+
+Using standard `python`:
+
+```bash
+python main.py --config config.yaml
 ```
 
 Example `config.yaml`:

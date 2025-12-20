@@ -1,3 +1,3 @@
-from .finetune import FEMAdapter
+from .finetune import FEMTaskAdapter
 
-__all__ = ["FEMAdapter"]
+__all__ = ["FEMTaskAdapter"]

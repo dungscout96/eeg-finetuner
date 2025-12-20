@@ -17,7 +17,7 @@ This project uses `uv` for dependency management.
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd standardized-finetuning
+cd eeg-finetuner
 
 # Install dependencies
 uv sync

@@ -1,0 +1,23 @@
+[project]
+name = "eeg-finetuner"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "braindecode>=1.2.0",
+    "eegdash>=0.4.1",
+    "lightning>=2.6.0",
+]
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["eeg_finetuner*"]
+
+[tool.setuptools.package-data]
+eeg_finetuner = ["**/*.yaml"]
+
+[build-system]
+requires = ["setuptools>=80.0", "wheel"]
+build-backend = "setuptools.build_meta"

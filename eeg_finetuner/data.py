@@ -41,9 +41,9 @@ class DatasetPipeline:
 
         # Define preprocessing steps
         preprocessors = [
-            # Preprocessor("set_eeg_reference", ref_channels="average", projection=True),
+            Preprocessor("set_eeg_reference", ref_channels="average", projection=True),
             Preprocessor("resample", sfreq=self.config["sampling_rate"]),
-            # Preprocessor("filter", l_freq=self.config["low_frequency"], h_freq=self.config["high_frequency"]),
+            Preprocessor("filter", l_freq=self.config["low_frequency"], h_freq=self.config["high_frequency"]),
             # Preprocessor(
             #     "pick_channels", ch_names=[ch.lower() for ch in self.config["channels"]], ordered=False
             # ),

@@ -31,13 +31,11 @@ class FEMTaskAdapter(L.LightningModule):
         self.task_info = task
 
     def forward(self, x, y, *args):
-        print("x shape:", x.shape)
         if self.freeze_backbone:
             with torch.no_grad():
                 representations = self.backbone(x)
         else:
             representations = self.backbone(x)
-        print("representations:", representations.shape)
         representations = representations.flatten(start_dim=1)
 
         y_hat = self.task_head(representations)

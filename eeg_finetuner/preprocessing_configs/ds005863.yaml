@@ -1,0 +1,8 @@
+data_query:
+  dataset: "ds005863"
+sampling_rate: 256
+low_frequency: 1.0
+high_frequency: 40.0
+channels: ["Fz", "Cz", "Pz"]
+trial_start_offset: -0.2
+trial_duration: 0.8

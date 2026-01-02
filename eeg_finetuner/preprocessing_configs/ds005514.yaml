@@ -1,0 +1,14 @@
+data_query: 
+  dataset: "ds005514"
+  task: "RestingState"
+  subject: ["NDARDB033FW5", "NDARAC589YMB"]
+sampling_rate: 256
+low_frequency: 1.0
+high_frequency: 40.0
+channels: ["Fz", "Cz", "Pz"]
+trial_start_offset: -0.5
+trial_stop_offset: 0
+trial_duration: 1
+train_ratio: 0.7
+val_ratio: 0.15
+test_ratio: 0.15

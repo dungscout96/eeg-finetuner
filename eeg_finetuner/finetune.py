@@ -8,17 +8,8 @@ from .task_head import get_task_head
 class FEMTaskAdapter(L.LightningModule):
     # https://lightning.ai/docs/pytorch/stable/advanced/transfer_learning.html
     def __init__(self, 
-        foundation_model: dict = {
-            "model_name": "labram",
-            "input_size": 128,
-            "num_channels": 64,
-            "embedding_size": 128
-        }, 
-        task: dict = {
-            "task_type": "classification",
-            "num_classes": 2,
-            "decoder_type": "linear"
-        }, 
+        foundation_model: dict, 
+        task: dict, 
         freeze_backbone: bool = True,
         learning_rate: float = 1e-3,
         **kwargs
@@ -35,16 +26,19 @@ class FEMTaskAdapter(L.LightningModule):
             task["task_type"], 
             decoder_type=task["decoder_type"], 
             num_classes=task["num_classes"],
-            input_size=foundation_model["embedding_size"]
+            input_size=foundation_model["embed_dim"]
             )
         self.task_info = task
 
     def forward(self, x, y, *args):
+        print("x shape:", x.shape)
         if self.freeze_backbone:
             with torch.no_grad():
                 representations = self.backbone(x)
         else:
-            representations = self.backbone(x).flatten()
+            representations = self.backbone(x)
+        print("representations:", representations.shape)
+        representations = representations.flatten(start_dim=1)
 
         y_hat = self.task_head(representations)
 

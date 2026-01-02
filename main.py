@@ -3,40 +3,16 @@ import yaml
 from lightning import Trainer
 
 from eeg_finetuner.finetune import FEMTaskAdapter
-from eeg_finetuner.data import get_dataloaders 
+from eeg_finetuner.data import DatasetPipeline
 
 def main():
     parser = argparse.ArgumentParser(description="Run EEG finetuning experiment")
-    parser.add_argument("--config", type=str, help="Path to the config.yaml file")
+    parser.add_argument("--config", type=str, help="Path to the config.yaml file", default="/Users/dtyoung/Documents/Research/LEM-SCCN/standardized-finetuning/config.yaml")
     args = parser.parse_args()
 
     if args.config:
         with open(args.config, "r") as f:
             config = yaml.safe_load(f)
-    else:
-        # Default configuration if no config file is provided
-        config = {
-            "foundation_model": {
-                "model_name": "labram",
-                "input_size": 128,
-                "num_channels": 64,
-                "embedding_size": 128
-            },
-            "task": {
-                "task_type": "classification",
-                "num_classes": 2,
-                "decoder_type": "linear",
-            },
-            "training": {
-                "freeze_backbone": True,
-                "learning_rate": 1e-3,
-                "max_epochs": 10
-            },
-            "data": {
-                "dataset": "example_eeg_dataset",
-                "batch_size": 32,
-            }
-        }
 
     finetuner = FEMTaskAdapter(
         foundation_model=config["foundation_model"],
@@ -45,7 +21,8 @@ def main():
         learning_rate=config.get("training", {}).get("learning_rate", 1e-3)
     )
     
-    train_dataloader, val_dataloader = get_dataloaders(config["data"])
+    data_pipeline = DatasetPipeline(config["data"]["dataset"])
+    train_dataloader, val_dataloader, test_dataloader = data_pipeline.process_dataset()
     trainer = Trainer(max_epochs=config.get("training", {}).get("max_epochs", 10))
     trainer.fit(finetuner, train_dataloader, val_dataloader)
 

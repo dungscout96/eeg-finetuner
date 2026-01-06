@@ -4,7 +4,8 @@ from lightning import Trainer
 
 from eeg_finetuner.finetune import FEMTaskAdapter
 from eeg_finetuner.data import DatasetPipeline
-from eeg_finetuner.generate_model_card import generate_model_card, pretty_print_model_card
+from eeg_finetuner.generate_model_card import generate_model_card
+import json
 
 def main():
     parser = argparse.ArgumentParser(description="Run EEG finetuning experiment")
@@ -32,7 +33,7 @@ def main():
         finetuned_model=finetuner,
         test_dataloader=train_dataloader, # TODO switch to test_dataloader
     )
-    pretty_print_model_card(model_card)
+    print(json.dumps(model_card, indent=2))  # This can be logged to a logging service
 
 if __name__ == "__main__":
     main()

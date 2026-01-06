@@ -6,6 +6,11 @@ from .foundation_model import get_foundation_model
 from .task_head import get_task_head
 from .metrics import binary_classification_metric_collection, multiclass_classification_metric_collection
 
+"""TODO: 
+- add support for other eval type such as k-fold cross validation, regression metrics, etc.
+- automatic hyperparameter tuning
+"""
+
 class FEMTaskAdapter(L.LightningModule):
     # https://lightning.ai/docs/pytorch/stable/advanced/transfer_learning.html
     def __init__(self, 

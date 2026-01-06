@@ -1,11 +1,31 @@
 from torch import nn
 import torch
+import pandas as pd
 from .metrics import binary_classification_metric_collection, multiclass_classification_metric_collection
+
+"""
+TODO:
+- other baseline model comparisons
+"""
+
+def flatten_dict(d: dict, parent_key: str = '', sep: str = '.') -> dict:
+    """
+    Flatten a nested dictionary into a single-level dictionary with dot notation keys.
+    """
+    items = []
+    for k, v in d.items():
+        new_key = f"{parent_key}{sep}{k}" if parent_key else k
+        if isinstance(v, dict):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)
+
 def generate_model_card(
     config: dict,
     finetuned_model: nn.Module,
     test_dataloader,
-):
+) -> dict:
     """
     Generate a model card for the finetuned model based on its performance on the test dataset.
 
@@ -46,26 +66,11 @@ def generate_model_card(
         metrics.update(y_hat, y)
     metrics = metrics.to("cpu")
     final_metrics = metrics.compute()
+    test_metrics = {f"{k}": v.item() for k, v in final_metrics.items()}
 
-    model_card = {
-        "model_name": config["foundation_model"].get("model_name", finetuned_model.__class__.__name__),
-        "task": finetuned_model.task_info if hasattr(finetuned_model, 'task_info') else "unknown",
-        "metrics": {k: v.item() for k, v in final_metrics.items()}
-    }
+    # Flatten config and add metrics
+    # model_card = flatten_dict(config)
+    model_card = config.copy()
+    model_card["test_metrics"] = test_metrics
 
     return model_card
-
-def pretty_print_model_card(model_card: dict):
-    """
-    Pretty print the model card with == separators.
-
-    Args:
-        model_card (dict): The model card dictionary.
-    """
-    print("=" * 30)
-    print(f"Model Name: {model_card['model_name']}")
-    print(f"Task: {model_card['task']}")
-    print("Performance Metrics:")
-    for metric, value in model_card["metrics"].items():
-        print(f"== {metric}: {value:.4f}")
-    print("=" * 30)

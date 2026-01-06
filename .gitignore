@@ -12,3 +12,9 @@ wheels/
 
 # logs
 **/lightning_logs/*
+
+# Cache
+**/eegdash_cache/*
+
+notebooks/
+**/.DS_Store

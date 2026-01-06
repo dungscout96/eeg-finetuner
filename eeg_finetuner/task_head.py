@@ -15,6 +15,7 @@ def get_classifier(classifier_type: str, **kwargs):
         return MLPHead(**kwargs)
     else:
         raise ValueError(f"Unknown classifier type: {classifier_type}")
+
 def get_regressor(regressor_type: str, **kwargs):
     if regressor_type == "linear":
         return LinearHead(num_classes=1, **kwargs)

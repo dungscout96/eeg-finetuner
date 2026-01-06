@@ -1,6 +1,7 @@
 from eegdash import EEGDashDataset
 import numpy as np
 import torch
+from torch.utils.data import Subset
 import mne
 from braindecode.preprocessing import (
     preprocess,
@@ -21,7 +22,6 @@ DATASET_REGISTRY = { # example
 class DatasetPipeline:
     def __init__(self, dataset):
         self.config = yaml.safe_load(open(f"eeg_finetuner/preprocessing_configs/{dataset}.yaml"))
-        print("initializing", self.config)
         self.dataset = EEGDashDataset(cache_dir="/Users/dtyoung/Documents/Research/LEM-SCCN/standardized-finetuning/eegdash_cache", **self.config["data_query"])
 
     def process_dataset(self):
@@ -87,7 +87,6 @@ class DatasetPipeline:
                     orig_time=raw.annotations.orig_time
                 ))
 
-        print("window_size_samples:", window_size_samples)
         windows_ds = create_windows_from_events(
             self.dataset,
             trial_start_offset_samples=trial_start,
@@ -240,17 +239,6 @@ def train_test_split(windows_ds,
         else:
             val_idx, test_idx = [], []
 
-    # Use braindecode's split if available
-    # if hasattr(windows_ds, 'split'):
-    #     print("Using braindecode's built-in split method.")
-    #     print(train_idx, val_idx, test_idx)
-    #     split_dict = {'train': train_idx, 'valid': val_idx, 'test': test_idx}
-    #     # Filter out empty splits
-    #     split_dict = {k: v for k, v in split_dict.items() if len(v) > 0}
-    #     datasets = windows_ds.split(split_dict)
-    #     return datasets.get('train'), datasets.get('valid'), datasets.get('test')
-    # else:
-    from torch.utils.data import Subset
     return (
         Subset(windows_ds, train_idx) if len(train_idx) > 0 else None,
         Subset(windows_ds, val_idx) if len(val_idx) > 0 else None,

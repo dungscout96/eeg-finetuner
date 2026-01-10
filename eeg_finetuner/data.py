@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from eegdash import EEGDashDataset
 import numpy as np
 import torch
@@ -19,10 +21,29 @@ DATASET_REGISTRY = { # example
     "bci": ["DS005863"]
 }
 
+BASE_DIR = Path(__file__).resolve().parents[1]
+PREPROCESSING_CONFIG_DIR = Path(__file__).resolve().parent / "preprocessing_configs"
+DEFAULT_CACHE_DIR = BASE_DIR / "eegdash_cache"
+
 class DatasetPipeline:
-    def __init__(self, dataset):
-        self.config = yaml.safe_load(open(f"eeg_finetuner/preprocessing_configs/{dataset}.yaml"))
-        self.dataset = EEGDashDataset(cache_dir="/Users/dtyoung/Documents/Research/LEM-SCCN/standardized-finetuning/eegdash_cache", **self.config["data_query"])
+    def __init__(self, dataset, overrides=None):
+        config_path = PREPROCESSING_CONFIG_DIR / f"{dataset}.yaml"
+        with open(config_path, "r", encoding="utf-8") as config_file:
+            self.config = yaml.safe_load(config_file)
+
+        overrides = overrides or {}
+        cache_dir_override = overrides.get("cache_dir") or self.config.get("cache_dir")
+        self.cache_dir = Path(cache_dir_override or DEFAULT_CACHE_DIR).expanduser().resolve()
+
+        for key, value in overrides.items():
+            if key == "cache_dir":
+                continue
+            if isinstance(value, dict) and isinstance(self.config.get(key), dict):
+                self.config[key].update(value)
+            else:
+                self.config[key] = value
+
+        self.dataset = EEGDashDataset(cache_dir=str(self.cache_dir), **self.config["data_query"])
 
     def process_dataset(self):
         '''

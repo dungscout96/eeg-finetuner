@@ -8,10 +8,30 @@ task:
   task_type: "classification"
   num_classes: 3
   decoder_type: "linear"
+  head:
+    dropout_rate: 0.1
 data:
   dataset: "ds005514"
-  batch_size: 16
+  batch_size: 64
+  cache_dir: "./eegdash_cache"
+  train_ratio: 0.7
+  val_ratio: 0.2
+  test_ratio: 0.1
 training:
   freeze_backbone: true
-  learning_rate: 0.001
-  max_epochs: 2
+  learning_rate: 0.0005
+  max_epochs: 5
+  optimizer:
+    name: "AdamW"
+    weight_decay: 0.05
+    betas: [0.9, 0.999]
+  scheduler:
+    name: "CosineAnnealingLR"
+    T_max: 50
+    eta_min: 0.00001
+    interval: "epoch"
+    warmup_steps: 5
+    warmup_start_factor: 0.2
+  dropout: 0.1
+  label_smoothing: 0.1
+  gradient_clip_val: 1.0
